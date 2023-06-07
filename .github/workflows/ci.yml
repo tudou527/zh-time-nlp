@@ -12,5 +12,3 @@ jobs:
         run: npm i && npm run test:cov
       - name: Upload Coverage
         uses: codecov/codecov-action@v3
-        with:
-          files: ${{ github.workspace }}/.nyc_output/coverage/lcov.info
