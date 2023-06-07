@@ -1,22 +1,79 @@
-# time-nlp
+# zh-time-nlp
 
-[![NPM version](https://img.shields.io/npm/v/time-nlp.svg?style=flat)](https://npmjs.org/package/time-nlp) [![NPM downloads](http://img.shields.io/npm/dm/time-nlp.svg?style=flat)](https://npmjs.org/package/time-nlp)
+![npm](https://img.shields.io/npm/v/zh-time-nlp)
+![ci](https://github.com/tudou527/zh-time-nlp/actions/workflows/ci.yml/badge.svg)
+[![codecov](https://codecov.io/gh/tudou527/zh-time-nlp/branch/master/graph/badge.svg)](https://codecov.io/gh/tudou527/zh-time-nlp)
 
-## Install
 
-```bash
-$ npm install
+中文自然语言时间识别。在 [CaoMeiYouRen/ChiTimeNLP](https://github.com/CaoMeiYouRen/ChiTimeNLP) 的基础上参考 [zhanzecheng/Time_NLP](https://github.com/zhanzecheng/Time_NLP.git) 的实现修改了
+`numberTranslator` 相关方法来修复某些情况下时间识别的问题，增加了时间区间的识别并补充了单元测试。
+
+## 安装
+
+```
+npm i -S zh-time-nlp
 ```
 
-```bash
-$ npm run dev
-$ npm run build
+
+## 使用示例
+
+```
+import nlp from 'zh-time-nlp';
+
+[
+  '五点一分',
+  '十点十分',
+  '八点十七分',
+  '早上八点五十九分',
+  '晚上八点五十九分',
+  '九点二十分',
+  '十一点五十九分五十九秒',
+  '2019-5-3 19:00',
+  '2019-05-3 19:00',
+  '2019-5-03 19:00',
+  '2019-05-03 19:00',
+  '没有时间点',
+  'Hi，all。下周一下午三点开会',
+  '周一开会',
+  '周五开会',
+  '下下周一开会',
+  '6:30 起床',
+  '明天6:30 起床',
+  '6-3 春游',
+  '6月3日 春游',
+  '12-1 春游',
+  '明天早上跑步',
+  '本周日到下周日出差',
+  '周四下午三点到五点开会',
+  '昨天上午，第八轮中美战略与经济对话气候变化问题特别联合会议召开',
+].forEach(str => console.log('"%s" => %s', str, nlp(str)));
 ```
 
-## Options
-
-TODO
-
-## LICENSE
-
-MIT
+输出
+|||
+|  ----  | ----  |
+| 五点一分 | 2023-06-07 17:01:00 |
+| 十点十分 | 2023-06-07 22:10:00 |
+| 八点十七分 | 2023-06-07 20:17:00 |
+| 早上八点五十九分 | 2023-06-07 20:59:00 |
+| 晚上八点五十九分 | 2023-06-07 20:59:00 |
+| 九点二十分 | 2023-06-07 21:20:00 |
+| 十一点五十九分五十九秒 | 2023-06-07 23:59:59 |
+| 2019-5-3 19:00 | 2019-05-03 19:00:00 |
+| 2019-05-3 19:00 | 2023-09-05 19:00:00 |
+| 2019-5-03 19:00 | 2019-05-03 19:00:00 |
+| 2019-05-03 19:00 | 2023-09-05 19:00:00 |
+| 没有时间点 | null |
+| Hi，all。下周一下午三点开会 | 2023-06-12 15:00:00 |
+| 周一开会 | 2023-06-12 08:00:00 |
+| 周五开会 | 2023-06-09 08:00:00 |
+| 下下周一开会 | 2023-06-19 08:00:00 |
+| 6:30 起床 | 2023-06-07 18:30:00 |
+| 明天6:30 起床 | 2023-06-08 06:30:00 |
+| 6-3 春游 | 2023-06-03 08:00:00 |
+| 6月3日 春游 | 2023-06-03 08:00:00 |
+| 12-1 春游 | 2023-12-01 08:00:00 |
+| 明天早上跑步 | 2023-06-08 08:00:00 |
+| 本周日到下周日出差 | { startTime: '2023-06-11 08:00:00', endTime: '2023-06-18 08:00:00' } |
+| 周四下午三点到五点开会 | { startTime: '2023-06-08 15:00:00', endTime: '2023-06-08 17:00:00' } |
+| 昨天上午，第八轮中美战略与经济对话气候变化问题特别联合会议召开 | 2023-06-06 10:00:00 |

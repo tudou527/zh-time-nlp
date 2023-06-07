@@ -46,7 +46,7 @@ export default class TimeUnit {
   }
 
   // 根据上下文时间补充时间信息
-  checkContextTime(checkTimeIndex: number) {
+  private checkContextTime(checkTimeIndex: number) {
     for (let i = 0; i < checkTimeIndex; i++) {
       if (this.tp.tunit[i] === -1 && this.tpOrigin.tunit[i] !== -1) {
         this.tp.tunit[i] = this.tpOrigin.tunit[i];
@@ -79,7 +79,7 @@ export default class TimeUnit {
    * 12月31日说“3号买菜”，则识别为明年1月的3号。
    * @param checkTimeIndex tp.tunit时间数组的下标
    */
-  preferFuture(checkTimeIndex: number) {
+  private preferFuture(checkTimeIndex: number) {
     // 检查被检查的时间级别之前，是否没有更高级的已经确定的时间，如果有，则不进行处理
     for (let i = 0; i < checkTimeIndex; i++) {
       if (this.tp.tunit[i] !== -1) {
@@ -120,7 +120,7 @@ export default class TimeUnit {
    * 如在周五说：周一开会，识别为下周一开会
    * @param weekday 识别出是周几（范围1-7）
    */
-  preferFutureWeek(weekday: number) {
+  private preferFutureWeek(weekday: number) {
     // 确认用户选项
     if (!this.isPreferFuture) {
       return;
@@ -146,7 +146,7 @@ export default class TimeUnit {
   }
 
   // 年-规范化方法（该方法识别时间表达式单元的年字段）
-  normSetYear() {
+  private normSetYear() {
     // 假如只有两位数来表示年份
     let rule = new RegExp('[0-9]{2}(?=年)', 'g');
     let match = this.timeExpression.match(rule);
@@ -171,7 +171,7 @@ export default class TimeUnit {
   }
 
   // 月-规范化方法（该方法识别时间表达式单元的月字段）
-  normSetMonth() {
+  private normSetMonth() {
     const rule = new RegExp('((10)|(11)|(12)|([1-9]))(?=月)', 'g');
     const match = this.timeExpression.match(rule);
     if (match && match.length > 0) {
@@ -183,7 +183,7 @@ export default class TimeUnit {
   }
 
   // 月-日 兼容模糊写法（该方法识别时间表达式单元的月、日字段）
-  normSetMonthFuzzyDay() {
+  private normSetMonthFuzzyDay() {
     let rule = new RegExp(
       '((10)|(11)|(12)|([1-9]))[月|.|-]([0-2][0-9]|3[0-1]|[1-9])',
       'g',
@@ -203,7 +203,7 @@ export default class TimeUnit {
   }
 
   // 日-规范化方法（该方法识别时间表达式单元的日字段）
-  normSetDay() {
+  private normSetDay() {
     const rule = new RegExp('([0-2][0-9]|3[0-1]|[1-9])(?=(日|号))', 'g');
     const match = this.timeExpression.match(rule);
     if (match && match.length > 0) {
@@ -215,7 +215,7 @@ export default class TimeUnit {
   }
 
   // 时-规范化方法（该方法识别时间表达式单元的时字段）
-  normSetHour() {
+  private normSetHour() {
     const tmp = this.timeExpression.replace(/(周|星期)[1-7]/g, '');
     let rule = new RegExp('([0-2]?[0-9])(?=(点|时))');
     let match = tmp.match(rule);
@@ -317,7 +317,7 @@ export default class TimeUnit {
   }
 
   // 分-规范化方法（该方法识别时间表达式单元的分字段）
-  normSetMinute() {
+  private normSetMinute() {
     let rule = new RegExp('([0-5]?[0-9](?=分(?!钟)))', 'g');
     let match = this.timeExpression.match(rule);
     if (match && match.length > 0) {
@@ -374,7 +374,7 @@ export default class TimeUnit {
   }
 
   //秒-规范化方法（该方法识别时间表达式单元的秒字段）
-  normSetSecond() {
+  private normSetSecond() {
     let rule = new RegExp('([0-5]?[0-9](?=秒))', 'g');
     let match = this.timeExpression.match(rule);
     if (match && match.length > 0) {
@@ -393,7 +393,7 @@ export default class TimeUnit {
   }
 
   // 特殊形式的规范化方法（该方法识别特殊形式的时间表达式单元的各个字段）
-  normSetTotal() {
+  private normSetTotal() {
     let tmpParser: string[] = [];
     const tmp = this.timeExpression.replace(/(周|星期)[1-7]/g, '');
     let rule = new RegExp('([0-2]?[0-9]):[0-5]?[0-9]:[0-5]?[0-9]', 'g');
@@ -507,7 +507,7 @@ export default class TimeUnit {
   }
 
   // 设置以上文时间为基准的时间偏移计算
-  normSetBaseRelated() {
+  private normSetBaseRelated() {
     let d = this.timeBase;
     // 观察时间表达式是否因当前相关时间表达式而改变时间
     const flag = [false, false, false];
@@ -572,7 +572,7 @@ export default class TimeUnit {
   }
 
   // 设置当前时间相关的时间表达式
-  normSetCurRelated() {
+  private normSetCurRelated() {
     let d = this.timeBase;
 
     // 观察时间表达式是否因当前相关时间表达式而改变时间
@@ -676,6 +676,7 @@ export default class TimeUnit {
     }
 
     const tmp = reverseStr(this.timeExpression);
+    
     rule = new RegExp('天前(?!大)', 'g');
     match = tmp.match(rule);
     if (match && match.length > 0) {
@@ -750,7 +751,7 @@ export default class TimeUnit {
   }
 
   // 更新timeBase使之具有上下文关联性
-  modifyTimeBase() {
+  private modifyTimeBase() {
     const d = this.timeBase;
 
     let s = '';

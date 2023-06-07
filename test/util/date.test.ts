@@ -1,3 +1,6 @@
+/**
+ * 本用例由 OpenAI 辅助编写
+ */
 import getDateAfterMonths, { getDateAfterDays, getDateAfterWeeks, getDateAfterYears } from "@/util/date";
 
 describe('date util', () => {

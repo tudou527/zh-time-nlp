@@ -1,36 +1,54 @@
 import nlp from '@/index';
+import TimeUnit from '@/time-unit';
+import * as stringUtil from '@/util/string';
 
-describe('date util', () => {
-  test('normal', () => {
+jest.mock('@/util/string');
+jest.mock('@/time-unit');
 
-    const test = [
-      '五点一分',
-      '十点十分',
-      '八点十七分',
-      '早上八点五十九分',
-      '晚上八点五十九分',
-      '九点二十分',
-      '十一点五十九分五十九秒',
-      '2019-5-3 19:00',
-      '2019-05-3 19:00',
-      '2019-5-03 19:00',
-      '2019-05-03 19:00',
-      '没有时间点',
-      'Hi，all。下周一下午三点开会',
-      '周一开会',
-      '周五开会',
-      '下下周一开会',
-      '6:30 起床',
-      '明天6:30 起床',
-      '6-3 春游',
-      '6月3日 春游',
-      '12-1 春游',
-      '明天早上跑步',
-      '本周日到下周日出差',
-      '周四下午三点到五点开会',
-      '昨天上午，第八轮中美战略与经济对话气候变化问题特别联合会议召开',
-    ].forEach(str => {
-      console.log('%s: %s', str, nlp(str));
-    })
+describe('nlp', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  test('单个时间', () => {
+    (stringUtil.toCDB as any).mockReturnValue('明天5:30分的会议');
+    (stringUtil.translateNumber as any).mockReturnValue('明天5:30分的会议');
+    (TimeUnit.prototype.timeNormalization as any).mockReturnValue('2023-06-07 05:00:00');
+
+    const result = nlp('明天 5：30 分的会议');
+    expect(result).toBe('2023-06-07 05:00:00');
+
+    // 空格过滤
+    const args = (stringUtil.toCDB as any).mock.calls[0];
+    expect(args[0]).toBe('明天5：30分会议');
+  });
+
+  test('非法时间格式', () => {
+    (stringUtil.translateNumber as any).mockReturnValue('天气不怎么好');
+    (TimeUnit.prototype.timeNormalization as any).mockReturnValue(false);
+
+    const result = nlp('天气不怎么好');
+    expect(result).toBe(null);
+  });
+
+  test('开始结束时间', () => {
+    (stringUtil.translateNumber as any).mockReturnValue('今天下午2点到5点半');
+    (TimeUnit.prototype.timeNormalization as any)
+      .mockReturnValueOnce('2023-06-07 14:00:00')
+      .mockReturnValueOnce('2023-06-07 17:30:00')
+
+    const result = nlp('今天下午2点到5点半', { isPreferFuture: true });
+    expect(result).toStrictEqual({
+      startTime: '2023-06-07 14:00:00',
+      endTime: '2023-06-07 17:30:00',
+    });
+  });
+
+  test('提供时间选项', () => {
+    (stringUtil.translateNumber as any).mockReturnValue('明天5点');
+    (TimeUnit.prototype.timeNormalization as any).mockReturnValue('2023-06-01 05:00:00');
+
+    const result = nlp('明天5点', { baseTime: '2023-06-01 05:00:00', isPreferFuture: true });
+    expect(result).toBe('2023-06-01 05:00:00');
   });
 });

@@ -9,7 +9,7 @@ import { toCDB, translateNumber } from '@/util/string';
  */
 export default function nlp(
   expression: string,
-  option?: { baseTime?: Date; isPreferFuture?: boolean },
+  option?: { baseTime?: string | number | Date; isPreferFuture?: boolean },
 ) {
   // 清理语气助词
   let targetStr = expression
@@ -21,14 +21,14 @@ export default function nlp(
   targetStr = toCDB(targetStr);
   // 大写数字转化
   targetStr = translateNumber(targetStr);
-
+  
   // 处理时间段
   const [startStr, ...endStr] = targetStr.split(/至|到|~|～/i);
 
   const startTimeUnit = new TimeUnit(
     startStr,
     option?.isPreferFuture || false,
-    option?.baseTime || new Date(),
+    option?.baseTime ? new Date(option?.baseTime) : new Date(),
   );
   const startTime = startTimeUnit.timeNormalization();
   let endTime: string | null = null;

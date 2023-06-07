@@ -1,3 +1,6 @@
+/**
+ * 本用例由 OpenAI 辅助编写
+ */
 import { reverseStr, toCDB, translateNumber } from "@/util/string";
 
 describe('string util', () => {
