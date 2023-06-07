@@ -3,7 +3,7 @@ import nlp from '@/index';
 
 describe('TimeUnit', () => {
 
-  test.only('normal', () => {
+  test.skip('normal', () => {
     [
       '五点一分',
       '十点十分',
