@@ -13,6 +13,7 @@ export default {
     '@/(.*)$': '<rootDir>/src/$1'
   },
   collectCoverageFrom: ['<rootDir>/src/**/*.ts', '!<rootDir>/src/cli/*.ts'],
+  coverageReporters: ['text', 'cobertura', 'lcov'],
   modulePathIgnorePatterns: [
     '<rootDir>/test/fixture',
   ],
