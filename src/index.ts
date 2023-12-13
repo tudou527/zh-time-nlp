@@ -28,7 +28,7 @@ export default function nlp(
   const startTimeUnit = new TimeUnit(
     startStr,
     option?.isPreferFuture || false,
-    option?.baseTime ? new Date(option?.baseTime) : new Date(),
+    option?.baseTime ? new Date(option?.baseTime as string) : new Date(),
   );
   const startTime = startTimeUnit.timeNormalization();
   let endTime: string | null = null;

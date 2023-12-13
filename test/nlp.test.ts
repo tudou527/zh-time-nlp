@@ -13,7 +13,9 @@ describe('nlp', () => {
   test('单个时间', () => {
     (stringUtil.toCDB as any).mockReturnValue('明天5:30分的会议');
     (stringUtil.translateNumber as any).mockReturnValue('明天5:30分的会议');
-    (TimeUnit.prototype.timeNormalization as any).mockReturnValue('2023-06-07 05:00:00');
+    (TimeUnit.prototype.timeNormalization as any).mockReturnValue(
+      '2023-06-07 05:00:00',
+    );
 
     const result = nlp('明天 5：30 分的会议');
     expect(result).toBe('2023-06-07 05:00:00');
@@ -35,7 +37,7 @@ describe('nlp', () => {
     (stringUtil.translateNumber as any).mockReturnValue('今天下午2点到5点半');
     (TimeUnit.prototype.timeNormalization as any)
       .mockReturnValueOnce('2023-06-07 14:00:00')
-      .mockReturnValueOnce('2023-06-07 17:30:00')
+      .mockReturnValueOnce('2023-06-07 17:30:00');
 
     const result = nlp('今天下午2点到5点半', { isPreferFuture: true });
     expect(result).toStrictEqual({
@@ -46,9 +48,14 @@ describe('nlp', () => {
 
   test('提供时间选项', () => {
     (stringUtil.translateNumber as any).mockReturnValue('明天5点');
-    (TimeUnit.prototype.timeNormalization as any).mockReturnValue('2023-06-01 05:00:00');
+    (TimeUnit.prototype.timeNormalization as any).mockReturnValue(
+      '2023-06-01 05:00:00',
+    );
 
-    const result = nlp('明天5点', { baseTime: '2023-06-01 05:00:00', isPreferFuture: true });
+    const result = nlp('明天5点', {
+      baseTime: '2023-06-01 05:00:00',
+      isPreferFuture: true,
+    });
     expect(result).toBe('2023-06-01 05:00:00');
   });
 });

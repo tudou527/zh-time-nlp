@@ -1,19 +1,35 @@
 /**
  * 本用例由 OpenAI 辅助编写
  */
-import { reverseStr, toCDB, translateNumber } from "@/util/string";
+import { reverseStr, toCDB, translateNumber } from '@/util/string';
 
 describe('string util', () => {
   test('reverseStr', () => {
     const str = reverseStr('处理自然语言中的时间');
-    
+
     expect(str).toBe('间时的中言语然自理处');
   });
 
   describe('translateNumber', () => {
     test('周x', () => {
-      const strList = ['周一','周二','周三','周四','周五','周六','周日'].map(str => translateNumber(str));
-      expect(strList).toStrictEqual(['周1','周2','周3','周4','周5','周6','周7']);
+      const strList = [
+        '周一',
+        '周二',
+        '周三',
+        '周四',
+        '周五',
+        '周六',
+        '周日',
+      ].map((str) => translateNumber(str));
+      expect(strList).toStrictEqual([
+        '周1',
+        '周2',
+        '周3',
+        '周4',
+        '周5',
+        '周6',
+        '周7',
+      ]);
     });
 
     test('中文大写数字', () => {
@@ -42,14 +58,16 @@ describe('string util', () => {
       expect(translateNumber('1百')).toBe('100');
       expect(translateNumber('1百贰')).toBe('100贰');
 
-      expect(translateNumber('两万零六百五和七百八，这周末下午2十二')).toBe('20650和780，这周7下午22');
+      expect(translateNumber('两万零六百五和七百八，这周末下午2十二')).toBe(
+        '20650和780，这周7下午22',
+      );
     });
   });
 
   describe('toCDB', () => {
     test('normal', () => {
-      const str = "：ＡBCdeｆGＨＩ，？！Hello, World!123";
-      const expected = ":ABCdefGHI,?!Hello, World!123";
+      const str = '：ＡBCdeｆGＨＩ，？！Hello, World!123';
+      const expected = ':ABCdefGHI,?!Hello, World!123';
 
       expect(toCDB(str)).toBe(expected);
     });

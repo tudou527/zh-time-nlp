@@ -69,7 +69,21 @@ export default class TimeUnit {
       // 如果时间已经超过了24小时
       this.tp.tunit[3] %= 24;
       this.tp.tunit[2] += 1;
+
+      // 判断日是否溢出
+      const tempDate = new Date(this.tp.tunit[0], this.tp.tunit[1], 0);
+      if (tempDate.getDate() < this.tp.tunit[2]) {
+        this.tp.tunit[2] = 1;
+        this.tp.tunit[1] += 1;
+
+        // 判断月份是否溢出
+        if (this.tp.tunit[1] > 12) {
+          this.tp.tunit[0] += 1;
+          this.tp.tunit[1] = 1;
+        }
+      }
     }
+
     this.isFirstTimeSolveContext = false;
   }
 
@@ -676,7 +690,7 @@ export default class TimeUnit {
     }
 
     const tmp = reverseStr(this.timeExpression);
-    
+
     rule = new RegExp('天前(?!大)', 'g');
     match = tmp.match(rule);
     if (match && match.length > 0) {
@@ -805,7 +819,7 @@ export default class TimeUnit {
     this.normSetMinute();
     this.normSetSecond();
     this.normSetTotal();
-    // this.modifyTimeBase()
+    // this.modifyTimeBase();
 
     this.tpOrigin.tunit = this.tp.tunit.concat();
 

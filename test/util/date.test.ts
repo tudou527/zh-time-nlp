@@ -1,7 +1,11 @@
 /**
  * 本用例由 OpenAI 辅助编写
  */
-import getDateAfterMonths, { getDateAfterDays, getDateAfterWeeks, getDateAfterYears } from "@/util/date";
+import getDateAfterMonths, {
+  getDateAfterDays,
+  getDateAfterWeeks,
+  getDateAfterYears,
+} from '@/util/date';
 
 describe('date util', () => {
   describe('getDateAfterDays', () => {
@@ -16,7 +20,7 @@ describe('date util', () => {
       const date = new Date();
       const result = getDateAfterDays(null as unknown as string, -3);
 
-      expect(date.getDate() - new Date(result).getDate()).toBe(3)
+      expect(date.getDate() - new Date(result).getDate()).toBe(3);
       expect(new Date(result).getTime() - date.getTime() < 0).toBe(true);
     });
   });
@@ -29,7 +33,7 @@ describe('date util', () => {
       expect(new Date(result).getDay()).toBe(date.getDay());
       expect(new Date(result).getDate() - date.getDate()).toBe(7);
     });
-  
+
     test('上周的周三', () => {
       const date = new Date('2023-06-06 10:00:00');
       date.setDate(date.getDate() - 2);
@@ -50,10 +54,10 @@ describe('date util', () => {
 
   describe('getDateAfterMonths', () => {
     test('下个月', () => {
-      const date = new Date();
+      const date = new Date('2023-12-01');
       const result = getDateAfterMonths(date, 1);
 
-      expect(new Date(result).getMonth() - date.getMonth()).toBe(1);
+      expect(new Date(result).getMonth() === 0).toBe(true);
       expect(result.getDate()).toBe(date.getDate());
       expect(new Date(result).getTime() - date.getTime() > 0).toBe(true);
     });

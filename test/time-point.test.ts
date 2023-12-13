@@ -1,4 +1,4 @@
-import TimePoint from "@/time-point";
+import TimePoint from '@/time-point';
 
 describe('TimePoint', () => {
   test('normal', () => {
@@ -14,7 +14,7 @@ describe('TimePoint', () => {
       date.getSeconds(),
     ]);
   });
-  
+
   test('without date', () => {
     const tp = new TimePoint();
     expect(tp.tunit).toStrictEqual([-1, -1, -1, -1, -1, -1]);
